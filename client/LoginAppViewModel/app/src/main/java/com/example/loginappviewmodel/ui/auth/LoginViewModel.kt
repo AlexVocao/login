@@ -10,6 +10,7 @@ import com.example.loginappviewmodel.data.network.dto.LoginRequest
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
@@ -63,6 +64,7 @@ class LoginViewModel(
                     _uiState.value = currentState.copy(
                         isLoading = false,
                         successToken = loginResponse.token,
+                        loginSuccess = true,
                         errorMessage = null
                     )
                     // TODO: Save token securely & Navigate to the next screen
@@ -72,14 +74,16 @@ class LoginViewModel(
                     _uiState.value = currentState.copy(
                         isLoading = false,
                         errorMessage = errorMessage,
-                        successToken = null
+                        successToken = null,
+                        loginSuccess = false
                     )
                 }
             } catch (e: IOException) {
                 _uiState.value = currentState.copy(
                     isLoading = false,
                     errorMessage = "Network error. Please try again.",
-                    successToken = null
+                    successToken = null,
+                    loginSuccess = false
                 )
                 e.printStackTrace()
             } catch (e: HttpException) {
@@ -88,20 +92,26 @@ class LoginViewModel(
                 _uiState.value = currentState.copy(
                     isLoading = false,
                     errorMessage = errorMessage,
-                    successToken = null
+                    successToken = null,
+                    loginSuccess = false
                 )
                 e.printStackTrace()
             } catch (e: Exception) {
                 _uiState.value = currentState.copy(
                     isLoading = false,
                     errorMessage = "An unexpected error occurred.",
-                    successToken = null
+                    successToken = null,
+                    loginSuccess = false
                 )
                 e.printStackTrace()
             }
         }
     }
 
+    // Gọi hàm này sau khi đã điều hướng để reset cờ thành công
+    fun onLoginNavigated() {
+        _uiState.update { it.copy(loginSuccess = false) }
+    }
     // parseApiError helper remains the same
     private fun parseApiError(errorBody: String?): String? {
         return try {

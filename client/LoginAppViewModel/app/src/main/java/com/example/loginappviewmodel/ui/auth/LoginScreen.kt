@@ -64,9 +64,13 @@ fun LoginScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
 
-    LaunchedEffect(uiState.successToken) {
-        if (uiState.successToken != null) {
+    LaunchedEffect(uiState.loginSuccess) {
+        if (uiState.loginSuccess) {
             // Navigate to the main screen or home screen
+            navController.navigate(AppDestinations.HOME_SCREEN) { // Điều hướng đến Home
+                popUpTo(AppDestinations.LOGIN_SCREEN) { inclusive = true } // Xóa màn hình Login/Signup khỏi backstack
+            }
+            loginViewModel.onLoginNavigated() // Reset cờ trong ViewModel
         }
     }
 
