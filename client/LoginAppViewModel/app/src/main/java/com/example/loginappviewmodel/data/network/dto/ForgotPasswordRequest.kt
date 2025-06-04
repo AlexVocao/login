@@ -1,3 +1,6 @@
 package com.example.loginappviewmodel.data.network.dto
 
-data class ForgotPasswordResquest()
+// --- Forgot Password DTOs ---
+data class ForgotPasswordRequest(
+    val email: String
+)

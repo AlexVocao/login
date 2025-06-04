@@ -1,3 +1,8 @@
 package com.example.loginappviewmodel.data.network.dto
 
-data class GenericSuccessResponse()
+import androidx.core.app.NotificationCompat.MessagingStyle.Message
+
+// --- Generic Success DTO ---
+data class GenericSuccessResponse(
+    val message: String
+)
