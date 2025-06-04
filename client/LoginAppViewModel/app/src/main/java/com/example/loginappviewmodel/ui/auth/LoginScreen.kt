@@ -152,7 +152,7 @@ fun LoginScreen(
             isError = uiState.errorMessage != null
         )
         TextButton(
-            onClick = { /* TODO: Forgot Password */ },
+            onClick = { navController.navigate(AppDestinations.FORGOT_PASSWORD_SCREEN) },
             modifier = Modifier.align(Alignment.End)
         ) { Text("Forgot Password") }
         Spacer(modifier = Modifier.height(24.dp))

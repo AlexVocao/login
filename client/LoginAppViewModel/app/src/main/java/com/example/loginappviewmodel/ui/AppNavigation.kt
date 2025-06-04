@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.loginappviewmodel.ui.auth.ForgotPasswordScreen
 import com.example.loginappviewmodel.ui.auth.HomeScreen
 import com.example.loginappviewmodel.ui.auth.LoginScreen
 import com.example.loginappviewmodel.ui.auth.SignupScreen
@@ -13,6 +14,7 @@ object AppDestinations {
     const val LOGIN_SCREEN = "login"
     const val SIGNUP_SCREEN = "signup"
     const val HOME_SCREEN = "home"
+    const val FORGOT_PASSWORD_SCREEN = "forgot_password"
 }
 
 @Composable
@@ -34,6 +36,9 @@ fun AppNavigation(modifier: Modifier = Modifier) {
         }
         composable(AppDestinations.HOME_SCREEN) {
             HomeScreen(navController)
+        }
+        composable(AppDestinations.FORGOT_PASSWORD_SCREEN) {
+            ForgotPasswordScreen(navController)
         }
     }
 }

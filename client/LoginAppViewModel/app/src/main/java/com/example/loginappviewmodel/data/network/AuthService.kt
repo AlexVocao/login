@@ -1,5 +1,7 @@
 package com.example.loginappviewmodel.data.network
 
+import com.example.loginappviewmodel.data.network.dto.ForgotPasswordRequest
+import com.example.loginappviewmodel.data.network.dto.GenericSuccessResponse
 import com.example.loginappviewmodel.data.network.dto.LoginRequest
 import com.example.loginappviewmodel.data.network.dto.LoginResponse
 import com.example.loginappviewmodel.data.network.dto.SignupRequest
@@ -23,12 +25,18 @@ interface AuthService {
     suspend fun login(
         @Body requestBody: LoginRequest
     ): Response<LoginResponse> // Use new LoginResponse DTO
+
+    @POST("api/auth/forgot-password")
+    suspend fun forgotPassword(
+        @Body requestBody: ForgotPasswordRequest
+    ): Response<GenericSuccessResponse>
 }
 
 object RetrofitInstance {
     // Use 10.0.2.2 for Android Emulator accessing localhost on host machine
     // Use your machine's local network IP for physical device testing on same Wi-Fi
     private const val BASE_URL = "http://10.0.2.2:3000/" // Ensure trailing slash!
+    //private const val BASE_URL = "http://192.168.1.11:3000/" // Ensure trailing slash!
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
