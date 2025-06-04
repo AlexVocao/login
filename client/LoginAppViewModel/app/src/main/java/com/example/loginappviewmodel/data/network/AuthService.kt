@@ -4,6 +4,7 @@ import com.example.loginappviewmodel.data.network.dto.ForgotPasswordRequest
 import com.example.loginappviewmodel.data.network.dto.GenericSuccessResponse
 import com.example.loginappviewmodel.data.network.dto.LoginRequest
 import com.example.loginappviewmodel.data.network.dto.LoginResponse
+import com.example.loginappviewmodel.data.network.dto.ResetPasswordRequest
 import com.example.loginappviewmodel.data.network.dto.SignupRequest
 import com.example.loginappviewmodel.data.network.dto.SignupResponse
 import okhttp3.OkHttpClient
@@ -29,6 +30,11 @@ interface AuthService {
     @POST("api/auth/forgot-password")
     suspend fun forgotPassword(
         @Body requestBody: ForgotPasswordRequest
+    ): Response<GenericSuccessResponse>
+
+    @POST("api/auth/reset-password")
+    suspend fun resetPassword(
+        @Body requestBody: ResetPasswordRequest
     ): Response<GenericSuccessResponse>
 }
 

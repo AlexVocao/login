@@ -38,6 +38,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.loginappviewmodel.ui.AppDestinations
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -86,6 +87,16 @@ fun ForgotPasswordScreen(
                     color = Color.Green,
                 )
                 Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = {
+                        focusManager.clearFocus()
+                        keyboardController?.hide()
+                        navController.navigate(AppDestinations.RESET_PASSWORD_SCREEN)
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Go to Reset Password")
+                }
             }
 
             uiState.errorMessage?.let {
