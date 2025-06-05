@@ -27,3 +27,4 @@ local.properties
 *.apk
 *.aab
 caches/
+.idea/
