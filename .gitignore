@@ -1,3 +1,15 @@
+# macOS
+.DS_Store
+*.DS_Store
+
+# Node.js / npm / yarn
+node_modules/
+package-lock.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Android Studio / gradle
 *.iml
 .gradle
 /local.properties
@@ -7,9 +19,10 @@
 /.idea/workspace.xml
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
-.DS_Store
 /build
 /captures
 .externalNativeBuild
 .cxx
 local.properties
+*.apk
+*.aab
