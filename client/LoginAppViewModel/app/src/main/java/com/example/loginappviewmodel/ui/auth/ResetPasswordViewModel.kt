@@ -143,7 +143,7 @@ class ResetPasswordViewModel(
         if (errorBody.isNullOrBlank()) return null
 
         return try {
-            Gson().fromJson(errorBody, ApiErrorResponse::class.java)?.message ?: "Unknown error occurred."
+            Gson().fromJson(errorBody, ApiErrorResponse::class.java)?.error ?: "Unknown error occurred."
         } catch (e: Exception) {
             e.printStackTrace()
             "An error occurred while parsing the error response."

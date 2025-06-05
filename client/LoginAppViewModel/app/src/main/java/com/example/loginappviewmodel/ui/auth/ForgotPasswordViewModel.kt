@@ -56,7 +56,7 @@ class ForgotPasswordViewModel(
             return "An unknown error occurred"
         }
         return try {
-            Gson().fromJson(errorBody, ApiErrorResponse::class.java).message
+            Gson().fromJson(errorBody, ApiErrorResponse::class.java).error
         } catch (e: Exception) {
             "Failed to parse error response: ${e.message ?: "Unknown error"}"
         }

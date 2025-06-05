@@ -70,7 +70,7 @@ class LoginViewModel(
                     // TODO: Save token securely & Navigate to the next screen
                 } else {
                     val errorBody = response.errorBody()?.string()
-                    val errorMessage = errorBody ?: "Login failed: ${response.code()}"
+                    val errorMessage = parseApiError(errorBody) ?: "Login failed"
                     _uiState.value = currentState.copy(
                         isLoading = false,
                         errorMessage = errorMessage,
@@ -115,7 +115,7 @@ class LoginViewModel(
     // parseApiError helper remains the same
     private fun parseApiError(errorBody: String?): String? {
         return try {
-            errorBody?.let { Gson().fromJson(it, ApiErrorResponse::class.java)?.message }
+            errorBody?.let { Gson().fromJson(it, ApiErrorResponse::class.java)?.error }
         } catch (e: Exception) {
             null
         }

@@ -171,7 +171,7 @@ class SignupViewModel(private val authService: AuthService = RetrofitInstance.au
     // --- Error Parsing ---
     private fun parseApiError(errorBody: String?): String? {
         return try {
-            errorBody?.let { Gson().fromJson(it, ApiErrorResponse::class.java)?.message }
+            errorBody?.let { Gson().fromJson(it, ApiErrorResponse::class.java)?.error }
         } catch (e: Exception) {
             null
         }

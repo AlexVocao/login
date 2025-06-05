@@ -1,3 +1,7 @@
 package com.example.loginappviewmodel.data.network.dto
 
-data class ResetPasswordRequest()
+// --- Reset Password DTOs ---
+data class ResetPasswordRequest(
+    val token: String,
+    val newPassword: String
+)
