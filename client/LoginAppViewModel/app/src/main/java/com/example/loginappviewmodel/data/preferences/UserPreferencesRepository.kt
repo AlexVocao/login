@@ -8,7 +8,6 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
@@ -32,7 +31,7 @@ class UserPreferencesRepository(private val context: Context) {
     }
 
     // Function to get the authentication token. It will emit the new value whenever it changes
-    suspend fun getAuthToken(): String? {
+    suspend fun getAuthTokenOnce(): String? {
         return context.userDataStore.data
             .catch { exception ->
                 // Handle any exceptions that occur while reading data

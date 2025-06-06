@@ -3,7 +3,6 @@ package com.example.loginappviewmodel.ui.auth
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.loginappviewmodel.data.network.AuthService
 import com.example.loginappviewmodel.data.network.RetrofitInstance
@@ -68,7 +67,6 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                     println("Login successful token: ${loginResponse.token}")
                     println("Login successful user: ${loginResponse.user}")
                     userPreferencesRepository.saveAuthToken(loginResponse.token)
-                    println("Get Token from UserPreferences: ${userPreferencesRepository.getAuthToken()}")
 
                     _uiState.value = currentState.copy(
                         isLoading = false,

@@ -5,11 +5,12 @@ import com.example.loginappviewmodel.data.network.dto.ForgotPasswordRequest
 import com.example.loginappviewmodel.data.network.dto.GenericSuccessResponse
 import com.example.loginappviewmodel.data.network.dto.LoginRequest
 import com.example.loginappviewmodel.data.network.dto.LoginResponse
+import com.example.loginappviewmodel.data.network.dto.ProfileResponse
 import com.example.loginappviewmodel.data.network.dto.ResetPasswordRequest
 import com.example.loginappviewmodel.data.network.dto.SignupRequest
 import com.example.loginappviewmodel.data.network.dto.SignupResponse
+import com.example.loginappviewmodel.data.network.dto.UserDto
 import com.example.loginappviewmodel.data.preferences.UserPreferencesRepository
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -18,6 +19,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 import java.util.concurrent.TimeUnit
 
@@ -41,12 +43,16 @@ interface AuthService {
     suspend fun resetPassword(
         @Body requestBody: ResetPasswordRequest
     ): Response<GenericSuccessResponse>
+
+    // New endpoint to get user profile (requires jwt token)
+    @GET("api/profile/me")
+    suspend fun getUserProfile(): Response<ProfileResponse>
 }
 
 // --- Auth Interceptor (add token to header) ---
 class AuthInterceptor(private val userPreferencesRepository: UserPreferencesRepository) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): okhttp3.Response {
-        val token = runBlocking { userPreferencesRepository.getAuthToken() }
+        val token = runBlocking { userPreferencesRepository.getAuthTokenOnce() }
         val requestBuilder = chain.request().newBuilder()
         token?.let {
             requestBuilder.addHeader("Authorization", "Bearer $it")

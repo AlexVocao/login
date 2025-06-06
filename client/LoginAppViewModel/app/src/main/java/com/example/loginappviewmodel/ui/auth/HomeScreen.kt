@@ -15,8 +15,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.loginappviewmodel.ui.AppDestinations
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,15 +42,17 @@ fun HomeScreen(navController: NavController) {
             Text("You have successfully logged in.")
             Spacer(modifier = Modifier.height(24.dp))
             Button(onClick = {
-                // Navigate back to login, clearing the back stack up to login
-                navController.navigate(AppDestinations.LOGIN_SCREEN) {
-                    popUpTo(AppDestinations.HOME_SCREEN) { inclusive = true } // Remove home from backstack
-                    launchSingleTop = true // Avoid multiple copies of login if already there
-                }
-                // TODO: Clear any stored user session/token here
+                navController.navigate(AppDestinations.PROFILE_SCREEN)
             }) {
-                Text("LOGOUT")
+                Text("View Profile")
             }
         }
     }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun HomeScreenPreview() {
+    val navController = rememberNavController()
+    HomeScreen(navController)
 }

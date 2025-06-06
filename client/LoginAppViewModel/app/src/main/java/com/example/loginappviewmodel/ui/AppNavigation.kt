@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.loginappviewmodel.ui.auth.ForgotPasswordScreen
 import com.example.loginappviewmodel.ui.auth.HomeScreen
 import com.example.loginappviewmodel.ui.auth.LoginScreen
+import com.example.loginappviewmodel.ui.auth.ProfileScreen
 import com.example.loginappviewmodel.ui.auth.ResetPasswordScreen
 import com.example.loginappviewmodel.ui.auth.SignupScreen
 
@@ -17,6 +18,7 @@ object AppDestinations {
     const val HOME_SCREEN = "home"
     const val FORGOT_PASSWORD_SCREEN = "forgot_password"
     const val RESET_PASSWORD_SCREEN = "reset_password"
+    const val PROFILE_SCREEN = "profile"
 }
 
 @Composable
@@ -44,6 +46,9 @@ fun AppNavigation(modifier: Modifier = Modifier) {
         }
         composable(AppDestinations.RESET_PASSWORD_SCREEN) {
             ResetPasswordScreen(navController)
+        }
+        composable(AppDestinations.PROFILE_SCREEN) {
+            ProfileScreen(navController)
         }
     }
 }
