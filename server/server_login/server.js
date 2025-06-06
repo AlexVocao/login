@@ -9,6 +9,7 @@ const { Pool } = require('pg');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const { console } = require('inspector');
+const jwt = require('jsonwebtoken');
 
 const pool = new Pool({
     user: process.env.DB_USER,
@@ -17,6 +18,24 @@ const pool = new Pool({
     password: process.env.DB_PASSWORD,
     port: parseInt(process.env.DB_PORT || '5432', 10),
 });
+
+// Middleware to authenticate JWT tokens
+const authenticateJWT = (req, res, next) => {
+    const token = req.headers['authorization']?.split(' ')[1]; // Get token from Authorization header
+    if (!token) {
+        console.error('Access token is missing');
+        return res.status(401).json({ message: 'Access token is required' });
+    }
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+        if (err) {
+            return res.status(403).json({ message: 'Invalid or expired token' });
+        }
+        req.user = user; // Attach user info to request object
+        console.log(`Authenticated user: ${user.username} (ID: ${user.userId})`);
+        next();
+    });
+};
 
 // Test DB connection (optional but recommended)
 pool.query('SELECT NOW()', (err, res) => {
@@ -80,7 +99,8 @@ app.post('/api/auth/signup', async (req, res) => {
 
         // Send a success response
         res.status(201).json({
-            message: 'User created successfully', user: {
+            message: 'User created successfully',
+            user: {
                 id: insertResult.rows[0].id,
                 username: insertResult.rows[0].username,
                 created_at: insertResult.rows[0].created_at,
@@ -128,7 +148,7 @@ app.post('/api/auth/login', async (req, res) => {
             console.log(`Login attempt failed: Invalid password for ${user.username}`);
             return res.status(401).json({ error: 'Invalid credentials.' });
         }
-/*
+
         // 5. Password matches - Generate JWT
         const jwtPayload = {
             userId: user.id,
@@ -150,15 +170,15 @@ app.post('/api/auth/login', async (req, res) => {
             jwtSecret,
             { expiresIn: '1h' } // Token expiration time (e.g., 1 hour, '7d' for 7 days)
         );
-*/
+
         console.log(`Login successful for user: ${user.username}`);
 
         // 6. Send Success Response with Token
         res.status(200).json({
             message: 'Login successful!',
-            //token: token
+            token: token,
             // Optionally include some user details if needed by the app immediately
-            // user: { id: user.id, username: user.username, email: user.email }
+            user: { id: user.id, username: user.username, email: user.email }
         });
 
     } catch (error) {
@@ -283,6 +303,33 @@ app.post('/api/auth/reset-password', async (req, res) => {
     }
 });
 
+
+// --- Protected Route ---
+// -- Profile Route --
+app.get('/api/profile/me', authenticateJWT, async (req, res) => {
+    const client = await pool.connect();
+    try {
+        // Get the user ID from the JWT
+        const userId = req.user.userId;
+
+        // Fetch user profile from the database
+        const findUserSql = 'SELECT id, username, email, address, gender, created_at FROM users WHERE id = $1';
+        const userResult = await client.query(findUserSql, [userId]);
+
+        if (userResult.rows.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const userProfile = userResult.rows[0];
+        res.status(200).json({ user: userProfile });
+
+    } catch (error) {
+        console.error('Error fetching user profile:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    } finally {
+        client.release();
+    }
+});
 
 
 
