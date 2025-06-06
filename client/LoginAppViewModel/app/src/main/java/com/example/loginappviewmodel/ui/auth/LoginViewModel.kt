@@ -1,12 +1,15 @@
 package com.example.loginappviewmodel.ui.auth
 
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.loginappviewmodel.data.network.AuthService
 import com.example.loginappviewmodel.data.network.RetrofitInstance
 import com.example.loginappviewmodel.data.network.dto.ApiErrorResponse
 import com.example.loginappviewmodel.data.network.dto.LoginRequest
+import com.example.loginappviewmodel.data.preferences.UserPreferencesRepository
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,9 +18,10 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
-class LoginViewModel(
-    private val authService: AuthService = RetrofitInstance.authService
-) : ViewModel() {
+class LoginViewModel(application: Application) : AndroidViewModel(application) {
+    private val authService: AuthService =
+        RetrofitInstance.getRetrofitInstance(application).create(AuthService::class.java)
+    private val userPreferencesRepository = UserPreferencesRepository(application.applicationContext)
     private var _uiState = MutableStateFlow(LoginUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -25,7 +29,7 @@ class LoginViewModel(
         _uiState.value = _uiState.value.copy(
             usernameOrEmailInput = usernameOrEmail,
             errorMessage = null,
-            successToken = null
+            receivedToken = null
         )
     }
 
@@ -33,7 +37,7 @@ class LoginViewModel(
         _uiState.value = _uiState.value.copy(
             passwordInput = password,
             errorMessage = null,
-            successToken = null
+            receivedToken = null
         )
     }
 
@@ -46,13 +50,13 @@ class LoginViewModel(
         if (usernameOrEmail.isBlank() || password.isBlank()) {
             _uiState.value = currentState.copy(
                 errorMessage = "Username or email and password are required.",
-                successToken = null
+                receivedToken = null
             )
             return
         }
 
         _uiState.value =
-            currentState.copy(isLoading = true, errorMessage = null, successToken = null)
+            currentState.copy(isLoading = true, errorMessage = null, receivedToken = null)
 
         viewModelScope.launch {
             try {
@@ -61,9 +65,15 @@ class LoginViewModel(
 
                 if (response.isSuccessful && response.body() != null) {
                     val loginResponse = response.body()!!
+                    println("Login successful token: ${loginResponse.token}")
+                    println("Login successful user: ${loginResponse.user}")
+                    userPreferencesRepository.saveAuthToken(loginResponse.token)
+                    println("Get Token from UserPreferences: ${userPreferencesRepository.getAuthToken()}")
+
                     _uiState.value = currentState.copy(
                         isLoading = false,
-                        successToken = loginResponse.token,
+                        receivedToken = loginResponse.token,
+                        loggedInUser = loginResponse.user,
                         loginSuccess = true,
                         errorMessage = null
                     )
@@ -74,7 +84,7 @@ class LoginViewModel(
                     _uiState.value = currentState.copy(
                         isLoading = false,
                         errorMessage = errorMessage,
-                        successToken = null,
+                        receivedToken = null,
                         loginSuccess = false
                     )
                 }
@@ -82,7 +92,7 @@ class LoginViewModel(
                 _uiState.value = currentState.copy(
                     isLoading = false,
                     errorMessage = "Network error. Please try again.",
-                    successToken = null,
+                    receivedToken = null,
                     loginSuccess = false
                 )
                 e.printStackTrace()
@@ -92,7 +102,7 @@ class LoginViewModel(
                 _uiState.value = currentState.copy(
                     isLoading = false,
                     errorMessage = errorMessage,
-                    successToken = null,
+                    receivedToken = null,
                     loginSuccess = false
                 )
                 e.printStackTrace()
@@ -100,7 +110,7 @@ class LoginViewModel(
                 _uiState.value = currentState.copy(
                     isLoading = false,
                     errorMessage = "An unexpected error occurred.",
-                    successToken = null,
+                    receivedToken = null,
                     loginSuccess = false
                 )
                 e.printStackTrace()
@@ -112,6 +122,7 @@ class LoginViewModel(
     fun onLoginNavigated() {
         _uiState.update { it.copy(loginSuccess = false) }
     }
+
     // parseApiError helper remains the same
     private fun parseApiError(errorBody: String?): String? {
         return try {

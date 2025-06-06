@@ -1,5 +1,7 @@
 package com.example.loginappviewmodel.ui.auth
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.loginappviewmodel.data.network.AuthService
@@ -12,9 +14,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class ForgotPasswordViewModel(
-    private val authService: AuthService = RetrofitInstance.authService
-) : ViewModel()  {
+class ForgotPasswordViewModel(application: Application) : AndroidViewModel(application)  {
+    private val authService: AuthService =
+        RetrofitInstance.getRetrofitInstance(application).create(AuthService::class.java)
     private val _uiStateFlow = MutableStateFlow(ForgotPasswordUiState())
     val uiStateFlow = _uiStateFlow.asStateFlow()
 

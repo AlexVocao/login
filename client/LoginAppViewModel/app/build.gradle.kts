@@ -59,6 +59,8 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose.android)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.datastore.preferences)
+    implementation(libs.security.crypto)
 
 
 

@@ -1,5 +1,7 @@
 package com.example.loginappviewmodel.ui.auth
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.loginappviewmodel.data.network.AuthService
@@ -14,8 +16,10 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
-class SignupViewModel(private val authService: AuthService = RetrofitInstance.authService) :
-    ViewModel() {
+class SignupViewModel(application: Application) :
+    AndroidViewModel(application) {
+    private val authService: AuthService =
+        RetrofitInstance.getRetrofitInstance(application).create(AuthService::class.java)
     private val _uiState = MutableStateFlow(SignupUiState())
     val uiState = _uiState.asStateFlow()
 
