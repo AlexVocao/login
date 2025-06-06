@@ -64,8 +64,6 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
                 if (response.isSuccessful && response.body() != null) {
                     val loginResponse = response.body()!!
-                    println("Login successful token: ${loginResponse.token}")
-                    println("Login successful user: ${loginResponse.user}")
                     userPreferencesRepository.saveAuthToken(loginResponse.token)
 
                     _uiState.value = currentState.copy(
