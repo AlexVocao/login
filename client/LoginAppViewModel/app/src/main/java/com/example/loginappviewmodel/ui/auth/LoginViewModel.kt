@@ -59,7 +59,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
         viewModelScope.launch {
             try {
-                val request = LoginRequest(usernameOrEmail, password
+                val request = LoginRequest(usernameOrEmail, password)
                 val response = authService.login(request)
 
                 if (response.isSuccessful && response.body() != null) {
