@@ -17,6 +17,9 @@ lifecycleRuntimeComposeAndroid = "2.8.7"
 navigationCompose = "2.8.9"
 datastorePreferences = "1.1.7"
 securityCrypto = "1.1.0-alpha06"
+mockkVersion = "1.13.7"
+byteBuddy = "1.14.15"
+archCoreTest = "2.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -46,6 +49,11 @@ androidx-lifecycle-runtime-compose-android = { group = "androidx.lifecycle", nam
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePreferences" }
 security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "securityCrypto" }
+
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockkVersion" }
+byte-buddy = { group = "net.bytebuddy", name = "byte-buddy", version.ref = "byteBuddy" }
+kotlin-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
+arch-core-test = { group = "androidx.arch.core", name = "core-testing", version.ref = "archCoreTest" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
