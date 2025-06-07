@@ -15,14 +15,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: 17
+          java-version: 21
+
+      - name: List files for debugging
+        run: ls -lR
+        working-directory: ./client/LoginAppViewModel
 
       - name: Grant execute permission for gradlew
-        run: chmod +x ./client/LoginAppViewModel/gradlew
+        run: chmod +x gradlew
+        working-directory: ./client/LoginAppViewModel
 
       - name: Run Unit Tests
-        run: ./client/LoginAppViewModel/gradlew test
+        run: ./gradlew test
+        working-directory: ./client/LoginAppViewModel
