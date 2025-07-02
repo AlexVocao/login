@@ -1,0 +1,16 @@
+
+1. start service
+    brew services start postgresql
+
+2. Login: user='alex'; port=5432; database_name='user_db'
+    psql -U alex -p 5432 -d user_db
+
+
+3. Extra
+'\du' -> check user
+'\c user_db' -> connect to database
+'\dt' -> list tables
+'\q' -> quit
+'\l' -> list databases
+'\password alex' -> change password for user 'alex'
+'select * from users;' -> select all from users table
