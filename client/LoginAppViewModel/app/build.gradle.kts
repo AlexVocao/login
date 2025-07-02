@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -62,7 +64,10 @@ dependencies {
     implementation(libs.datastore.preferences)
     implementation(libs.security.crypto)
 
-
+    // Hilt
+    implementation(libs.hilt.android.core)
+    implementation(libs.androidx.hilt.navigation.compose)
+    ksp(libs.hilt.compiler)
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlin.coroutines.test)

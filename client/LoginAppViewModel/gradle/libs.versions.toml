@@ -20,6 +20,9 @@ securityCrypto = "1.1.0-alpha06"
 mockkVersion = "1.13.7"
 byteBuddy = "1.14.15"
 archCoreTest = "2.1.0"
+hilt = "2.56.2"
+androidxHiltNavigationCompose = "1.2.0"
+ksp = "2.1.10-1.0.30"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -55,8 +58,15 @@ byte-buddy = { group = "net.bytebuddy", name = "byte-buddy", version.ref = "byte
 kotlin-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
 arch-core-test = { group = "androidx.arch.core", name = "core-testing", version.ref = "archCoreTest" }
 
+hilt-android-core = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidxHiltNavigationCompose" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 
