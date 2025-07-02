@@ -1,9 +1,9 @@
 package com.example.loginappviewmodel.di
 
 import android.content.Context
-import com.example.loginappviewmodel.data.network.AuthInterceptor
-import com.example.loginappviewmodel.data.network.AuthService
-import com.example.loginappviewmodel.data.preferences.UserPreferencesRepository
+import com.example.loginappviewmodel.data.resource.network.AuthInterceptor
+import com.example.loginappviewmodel.data.resource.network.AuthService
+import com.example.loginappviewmodel.data.resource.local.preferences.UserPreferencesDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,8 +22,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideUserPreferencesRepository(@ApplicationContext context: Context): UserPreferencesRepository {
-        return UserPreferencesRepository(context)
+    fun provideUserPreferencesRepository(@ApplicationContext context: Context): UserPreferencesDataSource {
+        return UserPreferencesDataSource(context)
     }
 
     @Provides
@@ -59,8 +59,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAuthInterceptor(userPreferencesRepository: UserPreferencesRepository): AuthInterceptor {
-        return AuthInterceptor(userPreferencesRepository)
+    fun provideAuthInterceptor(userPreferencesDataSource: UserPreferencesDataSource): AuthInterceptor {
+        return AuthInterceptor(userPreferencesDataSource)
     }
 
 

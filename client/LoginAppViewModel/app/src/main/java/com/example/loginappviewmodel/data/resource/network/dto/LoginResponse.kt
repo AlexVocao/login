@@ -1,4 +1,4 @@
-package com.example.loginappviewmodel.data.network.dto
+package com.example.loginappviewmodel.data.resource.network.dto
 
 data class LoginResponse(
     val message: String,

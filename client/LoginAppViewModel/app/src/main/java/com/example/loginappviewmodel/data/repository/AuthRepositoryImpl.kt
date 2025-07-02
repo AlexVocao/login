@@ -1,16 +1,16 @@
 package com.example.loginappviewmodel.data.repository
 
-import com.example.loginappviewmodel.data.network.AuthService
-import com.example.loginappviewmodel.data.network.dto.ForgotPasswordRequest
-import com.example.loginappviewmodel.data.network.dto.LoginRequest
-import com.example.loginappviewmodel.data.network.dto.ResetPasswordRequest
-import com.example.loginappviewmodel.data.network.dto.SignupRequest
-import com.example.loginappviewmodel.data.preferences.UserPreferencesRepository
+import com.example.loginappviewmodel.data.resource.network.AuthService
+import com.example.loginappviewmodel.data.resource.network.dto.ForgotPasswordRequest
+import com.example.loginappviewmodel.data.resource.network.dto.LoginRequest
+import com.example.loginappviewmodel.data.resource.network.dto.ResetPasswordRequest
+import com.example.loginappviewmodel.data.resource.network.dto.SignupRequest
+import com.example.loginappviewmodel.data.resource.local.preferences.UserPreferencesDataSource
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val authService: AuthService,
-    private val userPreferencesRepository: UserPreferencesRepository
+    private val userPreferencesDataSource: UserPreferencesDataSource
 ) : AuthRepository {
 
     // Auth Service
@@ -26,14 +26,14 @@ class AuthRepositoryImpl @Inject constructor(
 
     // User Preferences
     override suspend fun saveAuthToken(token: String) {
-        userPreferencesRepository.saveAuthToken(token)
+        userPreferencesDataSource.saveAuthToken(token)
     }
 
     override suspend fun getAuthTokenOnce(): String? {
-        return userPreferencesRepository.getAuthTokenOnce()
+        return userPreferencesDataSource.getAuthTokenOnce()
     }
 
     override suspend fun clearAuthToken() {
-        userPreferencesRepository.clearAuthToken()
+        userPreferencesDataSource.clearAuthToken()
     }
 }

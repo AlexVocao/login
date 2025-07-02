@@ -2,8 +2,8 @@ package com.example.loginappviewmodel.ui.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.loginappviewmodel.data.network.dto.ApiErrorResponse
-import com.example.loginappviewmodel.data.network.dto.ResetPasswordRequest
+import com.example.loginappviewmodel.data.resource.network.dto.ApiErrorResponse
+import com.example.loginappviewmodel.data.resource.network.dto.ResetPasswordRequest
 import com.example.loginappviewmodel.data.repository.AuthRepository
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel

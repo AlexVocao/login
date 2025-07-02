@@ -1,20 +1,14 @@
 package com.example.loginappviewmodel.ui.auth
 
-import android.app.Application
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.example.loginappviewmodel.data.network.AuthService
-import com.example.loginappviewmodel.data.network.RetrofitInstance
-import com.example.loginappviewmodel.data.network.dto.LoginRequest
-import com.example.loginappviewmodel.data.network.dto.LoginResponse
-import com.example.loginappviewmodel.data.network.dto.UserDto
-import com.example.loginappviewmodel.data.preferences.UserPreferencesRepository
+import com.example.loginappviewmodel.data.repository.AuthRepository
+import com.example.loginappviewmodel.data.resource.network.dto.LoginRequest
+import com.example.loginappviewmodel.data.resource.network.dto.LoginResponse
+import com.example.loginappviewmodel.data.resource.network.dto.UserDto
 import io.mockk.Runs
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
-import io.mockk.mockkObject
-import io.mockk.spyk
 import io.mockk.unmockkAll
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -43,31 +37,16 @@ class LoginViewModelTest {
     // Use StandardTestDispatcher for coroutine test
     private val dispatcher = StandardTestDispatcher()
 
-    private lateinit var application: Application
-    private lateinit var authService: AuthService
-    private lateinit var userPreferencesRepository: UserPreferencesRepository
+    private lateinit var authRepository: AuthRepository
     private lateinit var viewModel: LoginViewModel
 
     @Before
     fun setUp() {
         Dispatchers.setMain(dispatcher)
-        application = mockk(relaxed = true)
-        authService = mockk(relaxed = true)
-        userPreferencesRepository = mockk(relaxed = true)
-        // Patch RetrofitInstance.getRetrofitInstance to return mock retrofit
-        mockkObject(RetrofitInstance)
-        every { RetrofitInstance.getRetrofitInstance(any()) } returns mockk {
-            every { create(AuthService::class.java) } returns authService
-        }
-        viewModel = LoginViewModel(application)
-        // Replace with our mock
-        viewModel = spyk(viewModel, recordPrivateCalls = true)
-        viewModel.apply {
-            // inject mock userPreferencesRepository if possible
-            LoginViewModel::class.java.getDeclaredField("userPreferencesRepository")
-                .apply { isAccessible = true }
-                .set(this, userPreferencesRepository)
-        }
+        // Mock AuthService only
+        authRepository = mockk(relaxed = true)
+        // Init ViewModel with mocked AuthService
+        viewModel = LoginViewModel(authRepository)
     }
 
     @After
@@ -118,8 +97,8 @@ class LoginViewModelTest {
             created_at = "2023-10-01T12:00:00Z",
             )
         val loginResponse = LoginResponse("Login success", "token123", userDto)
-        coEvery { authService.login(any()) } returns Response.success(loginResponse)
-        coEvery { userPreferencesRepository.saveAuthToken(any()) } just Runs
+        coEvery { authRepository.login(any()) } returns Response.success(loginResponse)
+        coEvery { authRepository.saveAuthToken(any()) } just Runs
 
         viewModel.onUsernameOrEmailChange("user")
         viewModel.onPasswordChange("pass")
@@ -139,7 +118,7 @@ class LoginViewModelTest {
         val errorMsg = "Invalid credentials"
         val errorBody = """{"error":"$errorMsg"}"""
         val responseBody = ResponseBody.create("application/json".toMediaTypeOrNull(), errorBody)
-        coEvery { authService.login(any()) } returns Response.error(401, responseBody)
+        coEvery { authRepository.login(any()) } returns Response.error(401, responseBody)
         viewModel.onUsernameOrEmailChange("user")
         viewModel.onPasswordChange("wrongpass")
         viewModel.performLogin()

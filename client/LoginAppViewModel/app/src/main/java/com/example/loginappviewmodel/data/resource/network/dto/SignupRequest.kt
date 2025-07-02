@@ -1,4 +1,4 @@
-package com.example.loginappviewmodel.data.network.dto
+package com.example.loginappviewmodel.data.resource.network.dto
 // --- Signup DTOs ---
 data class SignupRequest(
     val username: String,

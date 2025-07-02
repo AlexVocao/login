@@ -1,4 +1,4 @@
-package com.example.loginappviewmodel.data.network.dto
+package com.example.loginappviewmodel.data.resource.network.dto
 
 data class UserDto( // Reused in SignupResponse and potentially LoginResponse
     val id: Int, // Or String if using UUIDs

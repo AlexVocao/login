@@ -1,4 +1,4 @@
-package com.example.loginappviewmodel.data.network.dto
+package com.example.loginappviewmodel.data.resource.network.dto
 
 // --- Reset Password DTOs ---
 data class ResetPasswordRequest(

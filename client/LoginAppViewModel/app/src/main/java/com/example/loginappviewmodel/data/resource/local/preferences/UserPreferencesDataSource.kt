@@ -1,4 +1,4 @@
-package com.example.loginappviewmodel.data.preferences
+package com.example.loginappviewmodel.data.resource.local.preferences
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.map
 // Name "user_auth_prefs" is used to store user authentication preferences
 val Context.userDataStore: DataStore<Preferences> by preferencesDataStore(name = "user_auth_prefs")
 
-class UserPreferencesRepository(private val context: Context) {
+class UserPreferencesDataSource(private val context: Context) {
     // Key to store and retrieve the authentication token
     private object PreferencesKeys {
         val AUTH_TOKEN = stringPreferencesKey("auth_token")
