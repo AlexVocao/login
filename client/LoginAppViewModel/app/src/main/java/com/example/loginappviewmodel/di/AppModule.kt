@@ -1,8 +1,8 @@
 package com.example.loginappviewmodel.di
 
 import android.content.Context
-import com.example.loginappviewmodel.data.resource.network.AuthInterceptor
-import com.example.loginappviewmodel.data.resource.network.AuthService
+import com.example.loginappviewmodel.data.resource.network.api.AuthInterceptor
+import com.example.loginappviewmodel.data.resource.network.api.AuthService
 import com.example.loginappviewmodel.data.resource.local.preferences.UserPreferencesDataSource
 import dagger.Module
 import dagger.Provides

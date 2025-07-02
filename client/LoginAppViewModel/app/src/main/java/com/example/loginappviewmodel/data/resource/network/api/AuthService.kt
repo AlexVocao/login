@@ -1,4 +1,4 @@
-package com.example.loginappviewmodel.data.resource.network
+package com.example.loginappviewmodel.data.resource.network.api
 
 import com.example.loginappviewmodel.data.resource.network.dto.ForgotPasswordRequest
 import com.example.loginappviewmodel.data.resource.network.dto.GenericSuccessResponse

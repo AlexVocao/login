@@ -1,6 +1,6 @@
 package com.example.loginappviewmodel.data.repository
 
-import com.example.loginappviewmodel.data.resource.network.AuthService
+import com.example.loginappviewmodel.data.resource.network.api.AuthService
 import com.example.loginappviewmodel.data.resource.network.dto.ForgotPasswordRequest
 import com.example.loginappviewmodel.data.resource.network.dto.LoginRequest
 import com.example.loginappviewmodel.data.resource.network.dto.ResetPasswordRequest
