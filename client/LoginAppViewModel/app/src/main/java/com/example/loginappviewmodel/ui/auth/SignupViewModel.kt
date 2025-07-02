@@ -1,25 +1,22 @@
 package com.example.loginappviewmodel.ui.auth
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.loginappviewmodel.data.network.AuthService
-import com.example.loginappviewmodel.data.network.RetrofitInstance
 import com.example.loginappviewmodel.data.network.dto.ApiErrorResponse
 import com.example.loginappviewmodel.data.network.dto.SignupRequest
+import com.example.loginappviewmodel.data.repository.AuthRepository
 import com.google.gson.Gson
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
+import javax.inject.Inject
 
-class SignupViewModel(application: Application) :
-    AndroidViewModel(application) {
-    private val authService: AuthService =
-        RetrofitInstance.getRetrofitInstance(application).create(AuthService::class.java)
+@HiltViewModel
+class SignupViewModel @Inject constructor(private val authRepository: AuthRepository) : ViewModel() {
     private val _uiState = MutableStateFlow(SignupUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -108,7 +105,7 @@ class SignupViewModel(application: Application) :
         viewModelScope.launch {
             try {
                 val request = SignupRequest(username, email, password, address, gender)
-                val response = authService.signup(request)
+                val response = authRepository.signUp(request)
                 if (response.isSuccessful && response.body() != null) {
                     val signupResponse = response.body()!!
                     _uiState.update {

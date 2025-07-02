@@ -41,8 +41,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.loginappviewmodel.ui.AppDestinations
@@ -52,7 +52,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun ResetPasswordScreen(
     navController: NavController,
-    resetPasswordViewModel: ResetPasswordViewModel = viewModel(),
+    resetPasswordViewModel: ResetPasswordViewModel = hiltViewModel(),
 ) {
     val uiState by resetPasswordViewModel.uiStateFlow.collectAsStateWithLifecycle()
     val keyboardController = LocalSoftwareKeyboardController.current

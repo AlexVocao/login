@@ -1,14 +1,12 @@
 package com.example.loginappviewmodel.ui.auth
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.loginappviewmodel.data.network.AuthService
-import com.example.loginappviewmodel.data.network.RetrofitInstance
 import com.example.loginappviewmodel.data.network.dto.ApiErrorResponse
 import com.example.loginappviewmodel.data.network.dto.ResetPasswordRequest
+import com.example.loginappviewmodel.data.repository.AuthRepository
 import com.google.gson.Gson
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,10 +14,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
+import javax.inject.Inject
 
-class ResetPasswordViewModel(application: Application) : AndroidViewModel(application) {
-    private val authService: AuthService =
-        RetrofitInstance.getRetrofitInstance(application).create(AuthService::class.java)
+@HiltViewModel
+class ResetPasswordViewModel @Inject constructor(private val authRepository: AuthRepository) : ViewModel() {
     private var _uiStateFlow = MutableStateFlow(ResetPasswordUiState())
     val uiStateFlow = _uiStateFlow.asStateFlow()
 
@@ -85,7 +83,7 @@ class ResetPasswordViewModel(application: Application) : AndroidViewModel(applic
         viewModelScope.launch {
             try {
                 val request = ResetPasswordRequest(token, newPassword)
-                val response = authService.resetPassword(request)
+                val response = authRepository.resetPassword(request)
                 if (response.isSuccessful && response.body() != null) {
                     _uiStateFlow.update {
                         it.copy(

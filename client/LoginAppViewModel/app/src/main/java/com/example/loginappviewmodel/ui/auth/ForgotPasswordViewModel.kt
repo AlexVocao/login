@@ -1,22 +1,20 @@
 package com.example.loginappviewmodel.ui.auth
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.loginappviewmodel.data.network.AuthService
-import com.example.loginappviewmodel.data.network.RetrofitInstance
 import com.example.loginappviewmodel.data.network.dto.ApiErrorResponse
 import com.example.loginappviewmodel.data.network.dto.ForgotPasswordRequest
+import com.example.loginappviewmodel.data.repository.AuthRepository
 import com.google.gson.Gson
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ForgotPasswordViewModel(application: Application) : AndroidViewModel(application)  {
-    private val authService: AuthService =
-        RetrofitInstance.getRetrofitInstance(application).create(AuthService::class.java)
+@HiltViewModel
+class ForgotPasswordViewModel @Inject constructor(private val authRepository: AuthRepository) : ViewModel() {
     private val _uiStateFlow = MutableStateFlow(ForgotPasswordUiState())
     val uiStateFlow = _uiStateFlow.asStateFlow()
 
@@ -35,7 +33,7 @@ class ForgotPasswordViewModel(application: Application) : AndroidViewModel(appli
         viewModelScope.launch {
             try {
                 val request = ForgotPasswordRequest(email)
-                val response = authService.forgotPassword(request)
+                val response = authRepository.forgotPassword(request)
                 println("Response: ${response.isSuccessful}, Body: ${response.body()}")
                 if (response.isSuccessful && response.body() != null) {
                     _uiStateFlow.update { it.copy(successMessage = "Password reset link sent to $email", isLoading = false, errorMessage = null, emailInt = "") }

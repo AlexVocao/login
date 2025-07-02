@@ -1,28 +1,22 @@
 package com.example.loginappviewmodel.ui.auth
 
-import android.app.Application
 import androidx.datastore.core.IOException
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.loginappviewmodel.data.network.AuthService
-import com.example.loginappviewmodel.data.network.RetrofitInstance
 import com.example.loginappviewmodel.data.network.dto.ApiErrorResponse
-import com.example.loginappviewmodel.data.network.dto.UserDto
-import com.example.loginappviewmodel.data.preferences.UserPreferencesRepository
+import com.example.loginappviewmodel.data.repository.AuthRepository
 import com.google.gson.Gson
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
+import javax.inject.Inject
 
-class ProfileViewModel(application: Application) : AndroidViewModel(application) {
-    private val authService: AuthService =
-        RetrofitInstance.getRetrofitInstance(application.applicationContext)
-            .create(AuthService::class.java)
-    private val userPreferencesRepository: UserPreferencesRepository =
-        UserPreferencesRepository(application.applicationContext)
+@HiltViewModel
+class ProfileViewModel @Inject constructor(private val authRepository: AuthRepository) : ViewModel() {
     private val _uiStateFlow = MutableStateFlow(ProfileUiState())
     val uiStateFlow = _uiStateFlow.asStateFlow()
 
@@ -34,7 +28,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         _uiStateFlow.update { it.copy(isLoading = true, errorMessage = null) }
         viewModelScope.launch {
             // Check token validity before making the request
-            val token = userPreferencesRepository.getAuthTokenOnce()
+            val token = authRepository.getAuthTokenOnce()
             if (token.isNullOrEmpty()) {
                 _uiStateFlow.update {
                     it.copy(
@@ -46,7 +40,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                 return@launch
             }
             try {
-                val response = authService.getUserProfile()
+                val response = authRepository.getUserProfile()
                 if (response.isSuccessful && response.body() != null) {
                     println("User profile fetched successfully: ${response.body()}")
                     val userProfile = response.body()?.user
@@ -90,7 +84,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     fun logout() {
         viewModelScope.launch {
-            userPreferencesRepository.clearAuthToken()
+            authRepository.clearAuthToken()
         }
     }
 

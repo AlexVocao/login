@@ -6,8 +6,9 @@ import com.example.loginappviewmodel.data.network.dto.LoginRequest
 import com.example.loginappviewmodel.data.network.dto.ResetPasswordRequest
 import com.example.loginappviewmodel.data.network.dto.SignupRequest
 import com.example.loginappviewmodel.data.preferences.UserPreferencesRepository
+import javax.inject.Inject
 
-class AuthRepositoryImpl(
+class AuthRepositoryImpl @Inject constructor(
     private val authService: AuthService,
     private val userPreferencesRepository: UserPreferencesRepository
 ) : AuthRepository {

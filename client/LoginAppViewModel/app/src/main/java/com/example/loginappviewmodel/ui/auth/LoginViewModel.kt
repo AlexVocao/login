@@ -1,26 +1,23 @@
 package com.example.loginappviewmodel.ui.auth
 
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.loginappviewmodel.data.network.AuthService
-import com.example.loginappviewmodel.data.network.RetrofitInstance
 import com.example.loginappviewmodel.data.network.dto.ApiErrorResponse
 import com.example.loginappviewmodel.data.network.dto.LoginRequest
-import com.example.loginappviewmodel.data.preferences.UserPreferencesRepository
+import com.example.loginappviewmodel.data.repository.AuthRepository
 import com.google.gson.Gson
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
+import javax.inject.Inject
 
-class LoginViewModel(application: Application) : AndroidViewModel(application) {
-    private val authService: AuthService =
-        RetrofitInstance.getRetrofitInstance(application).create(AuthService::class.java)
-    private val userPreferencesRepository = UserPreferencesRepository(application.applicationContext)
+@HiltViewModel
+class LoginViewModel @Inject constructor(private val authRepository: AuthRepository, ) : ViewModel() {
     private var _uiState = MutableStateFlow(LoginUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -60,11 +57,11 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             try {
                 val request = LoginRequest(usernameOrEmail, password)
-                val response = authService.login(request)
+                val response = authRepository.login(request)
 
                 if (response.isSuccessful && response.body() != null) {
                     val loginResponse = response.body()!!
-                    userPreferencesRepository.saveAuthToken(loginResponse.token)
+                    authRepository.saveAuthToken(loginResponse.token)
 
                     _uiState.value = currentState.copy(
                         isLoading = false,
